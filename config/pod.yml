@@ -1,0 +1,36 @@
+environment: prod
+
+fsx:
+  instances:
+    - name: prod-fsx-fileserver-01
+    - name: prod-fsx-fileserver-02
+
+  storage_capacity: 32
+  throughput_capacity: 32
+  storage_type: SSD
+  multi_az_deployment: true
+
+  backups:
+    retention_days: 30
+    daily_start_time: "03:00"
+    weekly_maintenance_time: "1:03:00"
+
+  logging:
+    log_group_name: "/aws/fsx/windows/prod-fsx-fileserver"
+
+network:
+  vpc_name: Starting
+  kms_key_id: "arn:aws:kms:ap-south-1:863518449660:key/8dcfd0e8-55bb-4f24-ac38-e5941048d0b2"
+
+ad:
+  domain_name: corp.example.com
+  dns_ips:
+    - 10.0.0.10
+    - 10.0.0.11
+  auth_secret_name: prod-fsx-ad-secret
+
+tags:
+  name: prod-fsx
+  Owner: prod-team
+  Application: ea-app
+  CostCenter: 1234ZQ
