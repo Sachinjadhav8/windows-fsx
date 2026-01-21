@@ -1,5 +1,6 @@
 module "windows_fsx" {
-  source   = "../../modules/windows_fsx"
+#  source   = "../../modules/windows_fsx"
+  source   = "./windows_fsx"
   for_each = local.fsx_instances
 
   environment         = local.config.environment
