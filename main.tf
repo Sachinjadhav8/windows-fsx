@@ -1,6 +1,6 @@
 module "fsx_ontap_standard" {
 # source = "git::ssh://dev.azure.com/EATechnology/ea-aws-tf-modules-ng//sbc-aws-fsx-NetApp-ONTAP-general"
-  source   = "../../modules/fsx"
+  source   = "../../module/fsx"
   app_name    = local.app_name
   environment = local.environment
   tags        = local.tags
