@@ -1,0 +1,146 @@
+environment: prod
+region: ap-south-1
+
+metadata:
+  app_name: sharedservices
+  tags:
+    Application: File Share
+    Environment: Production
+    Power Mgmt: EA24X7
+    Project Name: DC Exit
+    Business Unit: Technology
+    BAUCostCentre: C0220
+    TAGS: map-migrated:migIC8M4MHRTT
+
+fsx:
+  file_system_name: sharedservices_FSXN
+  deployment_type: MULTI_AZ_2
+
+  storage_capacity_gb: 5120
+
+  ssd_iops:
+    mode: USER_PROVISIONED
+    value: 25600
+
+  throughput_capacity: 384
+
+  backup:
+    daily_backup_enabled: true
+    backup_start_time: "14:01"
+    retention_days: 30
+
+  maintenance:
+    weekly_day: "Saturday"
+    weekly_start_time: "16:00"
+
+networking:
+  vpc_id: vpc-08de0a4f2871a5cea
+
+  subnet_ids:
+    - subnet-01fbd4d0904988e5e
+    - subnet-0e9edef7ccbb13f0
+
+  security_group_ids:
+    - sg-093a9df7d3b1235f4
+
+  route_tables:
+    use_main: true
+
+  network_type: IPV4
+  endpoint_ipv4_address_range: FLOATING_OUTSIDE_VPC
+
+encryption:
+  kms_key_type: AWS_MANAGED
+  kms_key_alias: aws/fsx
+
+admin_credentials:
+  secret_arn: prod/sharedservices/fsxadmin
+
+svms:
+  svm01:
+    name: FSxN01_SVM01
+    ad_join: true
+    volume_security_style: NTFS
+
+    active_directory:
+      domain_name: domain.internal
+      dns_ips:
+        - 10.240.160.27
+        - 10.240.240.66
+      netbios_name: FSxN01_SVM01
+      ou_dn: OU=AWS,OU=EnergyAustralia,OU=Member Servers,DC=domain,DC=internal
+      delegated_admin_group: Domain Admins
+      auth_secret_arn: prod/sharedservices/ad-join
+
+volumes:
+  FS01:
+    svm_key: svm01
+    name: FSxN01_SVM01_FS01
+    junction_path: /FS01
+    size_mb: 12582912
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  FS02:
+    svm_key: svm01
+    name: FSxN01_SVM01_FS02
+    junction_path: /FS02
+    size_mb: 20971520
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  FS03:
+    svm_key: svm01
+    name: FSxN01_SVM01_FS03
+    junction_path: /FS03
+    size_mb: 25165824
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  FS04:
+    svm_key: svm01
+    name: FSxN01_SVM01_FS04
+    junction_path: /FS04
+    size_mb: 25165824
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  FS05:
+    svm_key: svm01
+    name: FSxN01_SVM01_FS05
+    junction_path: /FS05
+    size_mb: 12582912
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  event_log:
+    svm_key: svm01
+    name: FSxN01_SVM01_event_log
+    junction_path: /event_log
+    size_mb: 307200
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  filestore:
+    svm_key: svm01
+    name: FSxN01_SVM01_filestore
+    junction_path: /filestore
+    size_mb: 512000
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false
+
+  filestorelog:
+    svm_key: svm01
+    name: FSxN01_SVM01_filestorelog
+    junction_path: /filestorelog
+    size_mb: 102400
+    security_style: NTFS
+    tiering_policy: ALL
+    snaplock: false

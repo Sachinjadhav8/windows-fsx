@@ -1,32 +1,34 @@
-module "windows_fsx" {
-#  source   = "../../modules/windows_fsx"
-  source   = "./windows_fsx"
-  for_each = local.fsx_instances
+module "fsx_ontap_standard" {
+# source = "git::ssh://dev.azure.com/EATechnology/ea-aws-tf-modules-ng//sbc-aws-fsx-NetApp-ONTAP-general"
+  source   = "../../modules/fsx"
+  app_name    = local.app_name
+  environment = local.environment
+  tags        = local.tags
 
-  environment         = local.config.environment
+  file_system_name = local.fsx_file_system_name
+  deployment_type  = local.deployment_type
 
-  storage_capacity    = local.config.fsx.storage_capacity
-  throughput_capacity = local.config.fsx.throughput_capacity
-  storage_type        = local.config.fsx.storage_type
-  multi_az_deployment = local.config.fsx.multi_az_deployment
+  storage_capacity_gb = local.storage_capacity_gb
+  throughput_capacity = local.throughput_capacity
+  provisioned_iops    = local.provisioned_iops
 
-  automatic_backup_retention_days   = local.config.fsx.backups.retention_days
-  daily_automatic_backup_start_time = local.config.fsx.backups.daily_start_time
-  weekly_maintenance_start_time     = local.config.fsx.backups.weekly_maintenance_time
+  daily_automatic_backup_enabled = local.backup.daily_backup_enabled
+  automatic_backup_start_time    = local.backup.backup_start_time
+  backup_retention_days          = local.backup.retention_days
 
-  fsx_log_group_name = local.config.fsx.logging.log_group_name
+  weekly_maintenance_start_time = "${local.maintenance.weekly_day}:${local.maintenance.weekly_start_time}"
 
-  vpc_name   = local.config.network.vpc_name
-  kms_key_id = local.config.network.kms_key_id
+  vpc_id               = local.vpc_id
+  subnet_ids           = local.subnet_ids
+  security_group_ids   = local.security_group_ids
+  use_main_route_table = local.use_main_route_table
 
-  self_managed_ad_domain_name = local.config.ad.domain_name
-  self_managed_ad_dns_ips     = local.config.ad.dns_ips
-  ad_auth_secret_name         = local.config.ad.auth_secret_name
+  network_type                = local.network_type
+  endpoint_ipv4_address_range = local.endpoint_ipv4_address_range
 
-  tags = merge(
-    local.config.tags,
-    {
-      name = each.key
-    }
-  )
+  kms_key_alias = local.kms_key_alias
+  secret_arn    = local.fsx_admin_secret_arn
+
+  svms    = local.svms
+  volumes = local.volumes
 }
